@@ -6,7 +6,9 @@ def create_app(test_config=None):
     
     from .routes.planets import planets_bp 
     
-    app.register_blueprint
+    
+    
+    app.register_blueprint(planets_bp)
 
     return app
 
