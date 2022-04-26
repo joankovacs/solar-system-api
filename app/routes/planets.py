@@ -23,8 +23,40 @@ planets = [
     Planet(4, "Aura", "Gas giant with 100 moons", True)
 ]
 
-planets_bp = Blueprint("planets", __name__)
+planets_bp = Blueprint("planets", __name__, url_prefix="/planets")
 
-@planets_bp.route("/planets", methods=["GET"])
+#currently unused
+def id_validation(id):
+    try:
+        id = int(id)
+    except ValueError:
+        return jsonify({"msg": f"Invalid planet ID: '{id}'"}), 400
+
+
+    if id not in [planet.to_dictionary()["id"] for planet in planets]:
+        return jsonify({"msg": f"Planet ID not found: '{id}'"}), 404
+
+    return None
+
+
+
+@planets_bp.route("", methods=["GET"])
 def get_all_planets():
     return jsonify([planet.to_dictionary() for planet in planets])
+
+
+@planets_bp.route("/<planet_id>", methods=["GET"])
+def get_one_planet(planet_id):
+    try:
+        planet_id = int(planet_id)
+    except ValueError:
+        return jsonify({"msg": f"Invalid planet ID: '{planet_id}'"}), 400
+
+    if planet_id not in [planet.to_dictionary()["id"] for planet in planets]:
+        return jsonify({"msg": f"Planet ID not found: '{planet_id}'"}), 404
+
+
+    chosen_planet = [planet.to_dictionary() for planet in planets if planet.to_dictionary()["id"]==planet_id]
+
+    return jsonify(chosen_planet)
+
