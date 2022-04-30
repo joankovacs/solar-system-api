@@ -1,29 +1,29 @@
-from flask import Blueprint, jsonify
+# from os import name
+from flask import Blueprint, jsonify, request
 
-class Planet:
-    def __init__(self, id, name, description, is_colonized):
-        self.id = id
-        self.name = name
-        self.description = description
-        self.is_colonized = is_colonized
-        
-    def to_dictionary(self):
-        return {
-            "id": self.id,
-            "name": self.name,
-            "description": self.description,
-            "is_colonized": self.is_colonized,    
-        }    
-        
-planets = [
-    Planet(0, "Artemis", "Hot rocky world with lots of metal ores", False),
-    Planet(1, "Calypso", "Shattered remnants of world that once had life", False),
-    Planet(2, "Veridia", "Once a center of civilization, now a runaway greenhouse jungle", True),
-    Planet(3, "Azure Spire", "Capital of The Galactic Imperium", True),
-    Planet(4, "Aura", "Gas giant with 100 moons", True)
-]
+from app import db
+from app.models.planets import Planet
 
 planets_bp = Blueprint("planets", __name__, url_prefix="/planets")
+
+@planets_bp.route("", methods = ["POST"])
+def create_planet():
+    request_body = request.get_json()
+    
+    new_planet = Planet(
+        name = request_body["name"],
+        description = request_body["description"],
+        is_colonized = request_body["is_colonized"]
+    )
+
+    db.session.add(new_planet)
+    db.session.commit()
+    
+    return {
+        "id" : new_planet.id
+    }, 201
+    
+    
 
 #currently unused
 def id_validation(id):
@@ -59,4 +59,4 @@ def get_one_planet(planet_id):
     chosen_planet = [planet.to_dictionary() for planet in planets if planet.to_dictionary()["id"]==planet_id]
 
     return jsonify(chosen_planet)
-
+.
