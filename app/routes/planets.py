@@ -59,4 +59,3 @@ def get_one_planet(planet_id):
     chosen_planet = [planet.to_dictionary() for planet in planets if planet.to_dictionary()["id"]==planet_id]
 
     return jsonify(chosen_planet)
-.
