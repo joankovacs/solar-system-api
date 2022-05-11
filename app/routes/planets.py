@@ -1,6 +1,5 @@
 # from os import name
 from flask import Blueprint, jsonify, request, abort, make_response
-
 from app import db
 from app.models.planets import Planet
 
@@ -20,7 +19,7 @@ def create_planet():
     
     return {
         "id" : new_planet.id,
-        "msg": f"Successfully created cat with id {new_planet.id}"
+        "msg": f"Successfully created planet with id {new_planet.id}"
     }, 201
 
 
@@ -82,9 +81,9 @@ def replace_one_planet(planet_id):
     if chosen_planet is None:
         return jsonify({'msg': f'Could not find car with id {planet_id}'}), 404
 
-    chosen_planet.driver = request_body["driver"]
-    chosen_planet.team = request_body["team"]
-    chosen_planet.mass_kg = request_body["mass_kg"]
+    chosen_planet.name = request_body["name"]
+    chosen_planet.description = request_body["description"]
+    chosen_planet.is_colonized = request_body["is_colonized"]
 
     db.session.commit()
 
