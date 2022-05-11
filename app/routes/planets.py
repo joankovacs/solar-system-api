@@ -19,7 +19,7 @@ def create_planet():
     
     return {
         "id" : new_planet.id,
-        "msg": f"Successfully created cat with id {new_planet.id}"
+        "msg": f"Successfully created planet with id {new_planet.id}"
     }, 201
 
 
